@@ -16,6 +16,12 @@ declare class Gogoanime extends AnimeParser {
      * @param id anime id
      */
     fetchAnimeInfo: (id: string) => Promise<IAnimeInfo>;
+    scrapeDownloadUrl: ({ id }: {
+        id?: string | undefined;
+    }) => Promise<any[] | {
+        error: unknown;
+    }>;
+    fetchDownloadUrl: (showId: string) => Promise<void>;
     /**
      *
      * @param episodeId episode id

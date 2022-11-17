@@ -15,7 +15,6 @@ import {
   MediaFormat,
 } from '../../models';
 import { GogoCDN, StreamSB, USER_AGENT } from '../../utils';
-
 class Gogoanime extends AnimeParser {
   override readonly name = 'Gogoanime';
   protected override baseUrl = 'https://www.gogoanime.dk';
@@ -163,6 +162,30 @@ class Gogoanime extends AnimeParser {
       throw new Error("Anime doesn't exist.");
     }
   };
+scrapeDownloadUrl = async({id = ''}) => {
+    let list : any[] = []
+    try {
+            const downloadPage = await axios.get(`${this.baseUrl}${id}`);
+            const $ = load(downloadPage.data);
+
+            $('.dowloads').each((i, elem) => {
+                list.push({
+                   downloadUrl: $(elem).find('a').attr('href'),
+                });
+            });
+            return list;
+    } catch (err) {
+        console.log(err);
+        return { error: err };
+    }
+};
+  fetchDownloadUrl = async (showId: string,) => {
+    try {
+        const downloadUrl = await this.scrapeDownloadUrl({ id: showId })
+    } catch {
+
+    }
+  }
 
   /**
    *
@@ -193,7 +216,6 @@ class Gogoanime extends AnimeParser {
           };
       }
     }
-
     try {
       const res = await axios.get(`${this.baseUrl}/${episodeId}`);
 

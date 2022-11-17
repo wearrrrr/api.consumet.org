@@ -132,6 +132,30 @@ class Gogoanime extends models_1.AnimeParser {
                 throw new Error("Anime doesn't exist.");
             }
         };
+        this.scrapeDownloadUrl = async ({ id = '' }) => {
+            let list = [];
+            try {
+                const downloadPage = await axios_1.default.get(`${this.baseUrl}${id}`);
+                const $ = (0, cheerio_1.load)(downloadPage.data);
+                $('.dowloads').each((i, elem) => {
+                    list.push({
+                        downloadUrl: $(elem).find('a').attr('href'),
+                    });
+                });
+                return list;
+            }
+            catch (err) {
+                console.log(err);
+                return { error: err };
+            }
+        };
+        this.fetchDownloadUrl = async (showId) => {
+            try {
+                const downloadUrl = await this.scrapeDownloadUrl({ id: showId });
+            }
+            catch (_a) {
+            }
+        };
         /**
          *
          * @param episodeId episode id
